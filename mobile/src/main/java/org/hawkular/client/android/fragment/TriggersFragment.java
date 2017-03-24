@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.hawkular.client.android.R;
-import org.hawkular.client.android.activity.MainActivity;
 import org.hawkular.client.android.activity.TriggerDetailActivity;
 import org.hawkular.client.android.adapter.TriggersAdapter;
 import org.hawkular.client.android.backend.BackendClient;
@@ -45,15 +44,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.PopupMenu;
+import android.widget.Toast;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -69,6 +68,8 @@ import timber.log.Timber;
  */
 public final class TriggersFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         TriggersAdapter.TriggerListener {
+    private boolean isTriggersFragmentAvailable;
+
     @BindView(R.id.list)
     ListView list;
 
@@ -89,6 +90,8 @@ public final class TriggersFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
+
+        isTriggersFragmentAvailable = true;
 
         setUpBindings();
 
@@ -234,12 +237,22 @@ public final class TriggersFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        isTriggersFragmentAvailable = false;
     }
 
     @Override public void onTriggerToggleChanged(View TriggerView, int triggerPosition, boolean state) {
         Trigger updatedTrigger = this.triggers.get(triggerPosition);
         updatedTrigger.setEnabledStatus(state);
-        BackendClient.of(TriggersFragment.this).updateTrigger(updatedTrigger,new TriggerUpdateCallback());
+        /*if (state){
+            Snackbar snackbar = Snackbar.make(getView(),R.string.trigger_on, Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+        else {
+            Snackbar snackbar = Snackbar.make(getView(),R.string.trigger_off, Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }*/
+        BackendClient.of(TriggersFragment.this).updateTrigger(updatedTrigger,new TriggerUpdateCallback(TriggerView, state));
     }
 
     @Override public void onTriggerTextClick(View triggerView, int triggerPosition) {
@@ -248,7 +261,6 @@ public final class TriggersFragment extends Fragment implements SwipeRefreshLayo
         intent.putExtra(Intents.Extras.TRIGGER,trigger);
         startActivity(intent);
     }
-
     /*private void showTriggerMenu(final View triggerView, final int triggerPosition) {
         PopupMenu triggerMenu = new PopupMenu(getActivity(), triggerView);
 
@@ -292,10 +304,12 @@ public final class TriggersFragment extends Fragment implements SwipeRefreshLayo
     private static final class TriggersCallback extends AbstractSupportFragmentCallback<List<Trigger>> {
         @Override
         public void onSuccess(List<Trigger> triggers) {
-            if (!triggers.isEmpty()) {
-                getTriggersFragment().setUpTriggers(triggers);
-            } else {
-                getTriggersFragment().showMessage();
+            if (getTriggersFragment().isTriggersFragmentAvailable) {
+                if (!triggers.isEmpty()) {
+                    getTriggersFragment().setUpTriggers(triggers);
+                } else {
+                    getTriggersFragment().showMessage();
+                }
             }
         }
 
@@ -303,7 +317,9 @@ public final class TriggersFragment extends Fragment implements SwipeRefreshLayo
         public void onFailure(Exception e) {
             Timber.d(e, "Triggers fetching failed.");
 
-            getTriggersFragment().showError();
+            if (getTriggersFragment().isTriggersFragmentAvailable) {
+                getTriggersFragment().showError();
+            }
         }
 
         private TriggersFragment getTriggersFragment() {
@@ -312,10 +328,20 @@ public final class TriggersFragment extends Fragment implements SwipeRefreshLayo
     }
 
     private class TriggerUpdateCallback extends AbstractSupportFragmentCallback{
+        View triggerToggle;
+        boolean state;
+        TriggerUpdateCallback(View triggerToggle, boolean state){
+            this.triggerToggle = triggerToggle;
+            this.state=state;
+        }
         @Override public void onSuccess(Object data) {
+            Toast.makeText(getActivity(), "toggle is "+state, Toast.LENGTH_SHORT).show();
+            triggerToggle.setEnabled(true);
         }
 
         @Override public void onFailure(Exception e) {
+            Toast.makeText(getActivity(), "toggle not changed", Toast.LENGTH_SHORT).show();
+            triggerToggle.setEnabled(true);
         }
     }
 

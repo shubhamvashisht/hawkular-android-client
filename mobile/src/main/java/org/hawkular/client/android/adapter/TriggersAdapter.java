@@ -84,7 +84,7 @@ public class TriggersAdapter extends BindableAdapter<Trigger> {
 
     @Override
     protected void bindView(Trigger trigger, final int position, View view) {
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
+        final ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.titleText.setText(trigger.getId());
         viewHolder.messageText.setText(trigger.getDescription());
         viewHolder.listItem.setOnClickListener(new View.OnClickListener() {
@@ -95,10 +95,10 @@ public class TriggersAdapter extends BindableAdapter<Trigger> {
         });
 
         viewHolder.toggleTrigger.setChecked(trigger.getEnableStatus());
-
         viewHolder.toggleTrigger.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 triggerListener.onTriggerToggleChanged(compoundButton,position,b);
+                viewHolder.toggleTrigger.setEnabled(false);
             }
         });
     }
