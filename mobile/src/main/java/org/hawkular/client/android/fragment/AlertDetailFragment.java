@@ -33,6 +33,7 @@ import org.hawkular.client.android.backend.model.AlertEvaluation;
 import org.hawkular.client.android.backend.model.AlertType;
 import org.hawkular.client.android.backend.model.Note;
 import org.hawkular.client.android.util.ColorSchemer;
+import org.hawkular.client.android.util.ErrorUtil;
 import org.hawkular.client.android.util.Formatter;
 import org.hawkular.client.android.util.Fragments;
 import org.hawkular.client.android.util.Preferences;
@@ -184,7 +185,7 @@ public class AlertDetailFragment extends Fragment implements SwipeRefreshLayout.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if(editNote.getText().toString().trim().equals("")){
-                    showError(R.string.message_empty);
+                    ErrorUtil.showError(getActivity().findViewById(android.R.id.content),R.string.message_empty);
                 } else {
                 editNote.setEnabled(false);
                 String name = Preferences.of(getActivity()).personaName().get();
@@ -402,7 +403,7 @@ public class AlertDetailFragment extends Fragment implements SwipeRefreshLayout.
 
         @Override
         public void onFailure(Exception e) {
-            showError(R.string.error_later);
+            ErrorUtil.showError(getActivity().findViewById(android.R.id.content),R.string.error_later);
         }
 
         private AlertsFragment getAlertsFragment() {
@@ -431,9 +432,5 @@ public class AlertDetailFragment extends Fragment implements SwipeRefreshLayout.
             editNote.setEnabled(true);
         }
 
-    }
-
-    private void showError(@StringRes int errorMessage) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_LONG).show();
     }
 }

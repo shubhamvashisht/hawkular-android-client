@@ -30,6 +30,7 @@ import org.hawkular.client.android.backend.model.Alert;
 import org.hawkular.client.android.backend.model.Resource;
 import org.hawkular.client.android.backend.model.Trigger;
 import org.hawkular.client.android.util.ColorSchemer;
+import org.hawkular.client.android.util.ErrorUtil;
 import org.hawkular.client.android.util.Fragments;
 import org.hawkular.client.android.util.Intents;
 import org.hawkular.client.android.util.Time;
@@ -352,10 +353,6 @@ public class AlertsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         ViewDirector.of(this).using(R.id.animator).show(R.id.message);
     }
 
-    private void showError() {
-        ViewDirector.of(this).using(R.id.animator).show(R.id.error);
-    }
-
     @Override
     public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
@@ -392,7 +389,7 @@ public class AlertsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             if (triggers.isEmpty()) {
                 Timber.d("Triggers list is empty, this should not happen.");
 
-                getAlertsFragment().showError();
+                ErrorUtil.showError(getAlertsFragment(),R.id.animator,R.id.error);
                 return;
             }
 
@@ -403,7 +400,7 @@ public class AlertsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         public void onFailure(Exception e) {
             Timber.d(e, "Triggers fetching failed.");
 
-            getAlertsFragment().showError();
+            ErrorUtil.showError(getAlertsFragment(),R.id.animator,R.id.error);
         }
 
         private AlertsFragment getAlertsFragment() {
@@ -429,7 +426,7 @@ public class AlertsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             Timber.d(e, "Alerts fetching failed.");
 
             if (getAlertsFragment().isAlertsFragmentAvailable) {
-                getAlertsFragment().showError();
+                ErrorUtil.showError(getAlertsFragment(),R.id.animator,R.id.error);
             }
         }
 
