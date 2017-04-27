@@ -17,42 +17,21 @@
 package org.hawkular.client.android.backend.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public enum MetricType implements Parcelable {
-    @SerializedName("AVAILABILITY")
+public enum MetricType {
+    @Json(name="AVAILABILITY")
     AVAILABILITY,
 
-    @SerializedName("GAUGE")
+    @Json(name="GAUGE")
     GAUGE,
 
-    @SerializedName("COUNTER")
+    @Json(name="COUNTER")
     COUNTER,
 
-    @SerializedName("COUNTER_RATE")
+    @Json(name="COUNTER_RATE")
     COUNTER_RATE;
-
-    public static Creator<MetricType> CREATOR = new Creator<MetricType>() {
-        @Override
-        public MetricType createFromParcel(Parcel parcel) {
-            return MetricType.valueOf(parcel.readString());
-        }
-
-        @Override
-        public MetricType[] newArray(int size) {
-            return new MetricType[size];
-        }
-    };
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(name());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

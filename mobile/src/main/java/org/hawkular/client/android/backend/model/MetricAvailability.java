@@ -16,13 +16,16 @@
  */
 package org.hawkular.client.android.backend.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public enum MetricAvailability implements Parcelable {
+import com.squareup.moshi.Json;
+
+public enum MetricAvailability {
+    @Json(name="UP")
     UP(Names.UP),
+    @Json(name = "DOWN")
     DOWN(Names.DOWN),
+    @Json(name = "UNKNOWN")
     UNKNOWN(Names.UNKNOWN);
 
     private static final class Names {
@@ -58,23 +61,4 @@ public enum MetricAvailability implements Parcelable {
         }
     }
 
-    public static Creator<MetricAvailability> CREATOR = new Creator<MetricAvailability>() {
-        @Override public MetricAvailability createFromParcel(Parcel parcel) {
-            return MetricAvailability.from(parcel.readString());
-        }
-
-        @Override public MetricAvailability[] newArray(int size) {
-            return new MetricAvailability[size];
-        }
-    };
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(name);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

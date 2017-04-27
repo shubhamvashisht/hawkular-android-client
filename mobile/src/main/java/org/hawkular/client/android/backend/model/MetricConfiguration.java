@@ -17,14 +17,15 @@
 package org.hawkular.client.android.backend.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-public final class MetricConfiguration implements Parcelable {
-    @SerializedName("type")
+public final class MetricConfiguration {
+    @Json(name = "type")
     private MetricType type;
 
     @VisibleForTesting
@@ -36,29 +37,4 @@ public final class MetricConfiguration implements Parcelable {
         return type;
     }
 
-    public static Creator<MetricConfiguration> CREATOR = new Creator<MetricConfiguration>() {
-        @Override
-        public MetricConfiguration createFromParcel(Parcel parcel) {
-            return new MetricConfiguration(parcel);
-        }
-
-        @Override
-        public MetricConfiguration[] newArray(int size) {
-            return new MetricConfiguration[size];
-        }
-    };
-
-    private MetricConfiguration(Parcel parcel) {
-        this.type = parcel.readParcelable(MetricType.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(type, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

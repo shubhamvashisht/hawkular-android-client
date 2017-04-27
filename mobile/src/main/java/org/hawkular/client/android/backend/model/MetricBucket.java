@@ -17,16 +17,17 @@
 package org.hawkular.client.android.backend.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 public abstract class MetricBucket {
 
-    @SerializedName("start")
+    @Json(name = "start")
     protected long startTimestamp;
 
-    @SerializedName("end")
+    @Json(name = "end")
     protected long endTimestamp;
 
-    @SerializedName("empty")
+    @Json(name = "empty")
     protected boolean empty;
 
     public abstract String getValue();

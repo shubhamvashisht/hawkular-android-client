@@ -17,45 +17,18 @@
 package org.hawkular.client.android.backend.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MetricAvailabilityBucket extends MetricBucket implements Parcelable {
+public class MetricAvailabilityBucket extends MetricBucket {
 
-    public static final Creator<MetricAvailabilityBucket> CREATOR = new Creator<MetricAvailabilityBucket>() {
-        @Override
-        public MetricAvailabilityBucket createFromParcel(Parcel in) {
-            return new MetricAvailabilityBucket(in);
-        }
-
-        @Override
-        public MetricAvailabilityBucket[] newArray(int size) {
-            return new MetricAvailabilityBucket[size];
-        }
-    };
-    @SerializedName("uptimeRatio")
+    @Json(name = "uptimeRatio")
     private String value;
-
-    protected MetricAvailabilityBucket(Parcel in) {
-        value = in.readString();
-        empty = in.readString().equals("true");
-        startTimestamp = in.readLong();
-        endTimestamp = in.readLong();
-    }
 
     public String getValue() {
         return value;
     }
 
-    @Override public int describeContents() {
-        return 0;
-    }
-
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(value);
-        dest.writeString(empty ? "true" : "false");
-        dest.writeLong(startTimestamp);
-        dest.writeLong(endTimestamp);
-    }
 }

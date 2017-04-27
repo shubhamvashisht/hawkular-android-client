@@ -18,46 +18,19 @@ package org.hawkular.client.android.backend.model;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MetricGaugeBucket extends MetricBucket implements Parcelable {
+public class MetricGaugeBucket extends MetricBucket {
 
-
-    public static final Creator<MetricGaugeBucket> CREATOR = new Creator<MetricGaugeBucket>() {
-        @Override
-        public MetricGaugeBucket createFromParcel(Parcel in) {
-            return new MetricGaugeBucket(in);
-        }
-
-        @Override
-        public MetricGaugeBucket[] newArray(int size) {
-            return new MetricGaugeBucket[size];
-        }
-    };
-    @SerializedName("avg")
+    @Json(name="avg")
     protected String value;
-
-    protected MetricGaugeBucket(Parcel in) {
-        value = in.readString();
-        empty = in.readString().equals("true");
-        startTimestamp = in.readLong();
-        endTimestamp = in.readLong();
-    }
 
     public String getValue() {
         return value;
     }
 
-    @Override public int describeContents() {
-        return 0;
     }
 
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(value);
-        dest.writeString(empty ? "true" : "false");
-        dest.writeLong(startTimestamp);
-        dest.writeLong(endTimestamp);
-    }
-}

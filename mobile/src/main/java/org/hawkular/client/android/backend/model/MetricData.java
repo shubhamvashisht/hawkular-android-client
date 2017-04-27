@@ -17,17 +17,18 @@
 package org.hawkular.client.android.backend.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-public final class MetricData implements Parcelable {
-    @SerializedName("value")
+public final class MetricData {
+    @Json(name="value")
     private String value;
 
-    @SerializedName("timestamp")
+    @Json(name="timestamp")
     private long timestamp;
 
     @VisibleForTesting
@@ -44,31 +45,4 @@ public final class MetricData implements Parcelable {
         return timestamp;
     }
 
-    public static Creator<MetricData> CREATOR = new Creator<MetricData>() {
-        @Override
-        public MetricData createFromParcel(Parcel parcel) {
-            return new MetricData(parcel);
-        }
-
-        @Override
-        public MetricData[] newArray(int size) {
-            return new MetricData[size];
-        }
-    };
-
-    private MetricData(Parcel parcel) {
-        this.value = parcel.readString();
-        this.timestamp = parcel.readLong();
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(value);
-        parcel.writeLong(timestamp);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }
