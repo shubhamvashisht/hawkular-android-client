@@ -16,21 +16,19 @@
  */
 package org.hawkular.client.android.backend.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-public final class AlertEvaluation implements Parcelable {
-    @SerializedName("condition")
+public final class AlertEvaluation {
+    @Json(name = "condition")
     private AlertEvaluationCondition condition;
 
-    @SerializedName("value")
+    @Json(name = "value")
     private String value;
 
-    @SerializedName("dataTimestamp")
+    @Json(name = "dataTimestamp")
     private long dataTimestamp;
 
     @VisibleForTesting
@@ -50,35 +48,5 @@ public final class AlertEvaluation implements Parcelable {
 
     public long getDataTimestamp() {
         return dataTimestamp;
-    }
-
-    public static Creator<AlertEvaluation> CREATOR = new Creator<AlertEvaluation>() {
-        @Override
-        public AlertEvaluation createFromParcel(Parcel parcel) {
-            return new AlertEvaluation(parcel);
-        }
-
-        @Override
-        public AlertEvaluation[] newArray(int size) {
-            return new AlertEvaluation[size];
-        }
-    };
-
-    private AlertEvaluation(Parcel parcel) {
-        this.condition = parcel.readParcelable(AlertEvaluationCondition.class.getClassLoader());
-        this.value = parcel.readString();
-        this.dataTimestamp = parcel.readLong();
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(condition, flags);
-        parcel.writeString(value);
-        parcel.writeLong(dataTimestamp);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 }

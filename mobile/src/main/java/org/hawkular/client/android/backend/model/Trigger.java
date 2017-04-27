@@ -20,22 +20,20 @@ import java.util.Map;
 
 import org.jboss.aerogear.android.core.RecordId;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-public class Trigger implements Parcelable {
+public class Trigger {
     @RecordId
-    @SerializedName("id")
+    @Json(name = "id")
     private String id;
-    @SerializedName("tags")
+    @Json(name = "tags")
     private Map<String, String> tags;
-    @SerializedName("description")
+    @Json(name = "description")
     private String description;
-    @SerializedName("enabled")
+    @Json(name = "enabled")
     private boolean enabled;
 
     public String getId() {
@@ -69,35 +67,4 @@ public class Trigger implements Parcelable {
         this.description = description;
     }
 
-    public static Creator<Trigger> CREATOR = new Creator<Trigger>() {
-        @Override
-        public Trigger createFromParcel(Parcel parcel) {
-            return new Trigger(parcel);
-        }
-
-        @Override
-        public Trigger[] newArray(int size) {
-            return new Trigger[size];
-        }
-    };
-
-    protected Trigger(Parcel parcel) {
-        this.id = parcel.readString();
-        this.description = parcel.readString();
-        this.tags = parcel.readHashMap(String.class.getClassLoader());
-        this.enabled = parcel.readString().equals("true");
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(description);
-        parcel.writeMap(tags);
-        parcel.writeString(enabled ? "true" : "false");
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

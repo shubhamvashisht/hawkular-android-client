@@ -16,40 +16,16 @@
  */
 package org.hawkular.client.android.backend.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public enum AlertStatus implements Parcelable {
-    @SerializedName("OPEN")
+public enum AlertStatus  {
+    @Json(name = "OPEN")
     OPEN,
 
-    @SerializedName("ACKNOWLEDGED")
+    @Json(name = "ACKNOWLEDGED")
     ACKNOWLEDGED,
 
-    @SerializedName("RESOLVED")
+    @Json(name = "RESOLVED")
     RESOLVED;
 
-    public static Creator<AlertStatus> CREATOR = new Creator<AlertStatus>() {
-        @Override
-        public AlertStatus createFromParcel(Parcel parcel) {
-            return AlertStatus.valueOf(parcel.readString());
-        }
-
-        @Override
-        public AlertStatus[] newArray(int size) {
-            return new AlertStatus[size];
-        }
-    };
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(name());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

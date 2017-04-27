@@ -17,23 +17,16 @@
 package org.hawkular.client.android.backend.model;
 
 import org.jboss.aerogear.android.core.RecordId;
-
-import com.google.gson.annotations.SerializedName;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.squareup.moshi.Json;
 import android.support.annotation.VisibleForTesting;
 
-/**
- * Created by anuj on 7/6/16.
- */
-public class Feed implements Parcelable {
+public class Feed {
 
     @RecordId
-    @SerializedName("id")
+    @Json(name = "id")
     private String id;
 
-    @SerializedName("path")
+    @Json(name = "path")
     private String path;
 
     @VisibleForTesting
@@ -45,40 +38,12 @@ public class Feed implements Parcelable {
         return id;
     }
 
-    public String getPath() {
-        return path;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
-    public static Creator<Feed> CREATOR = new Creator<Feed>() {
-        @Override
-        public Feed createFromParcel(Parcel parcel) {
-            return new Feed(parcel);
-        }
-
-        @Override
-        public Feed[] newArray(int size) {
-            return new Feed[size];
-        }
-    };
-
-    private Feed(Parcel parcel) {
-        this.id = parcel.readString();
-        this.path = parcel.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(path);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getPath() {
+        return path;
     }
 
 }

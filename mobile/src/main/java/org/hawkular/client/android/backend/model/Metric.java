@@ -19,27 +19,28 @@ package org.hawkular.client.android.backend.model;
 import org.jboss.aerogear.android.core.RecordId;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-public final class Metric implements Parcelable {
+public final class Metric {
     @RecordId
-    @SerializedName("id")
+    @Json(name = "id")
     private String id;
 
-    @SerializedName("name")
+    @Json(name = "name")
     private String name;
 
-    @SerializedName("path")
+    @Json(name = "path")
     private String path;
 
-    @SerializedName("properties")
+    @Json(name = "properties")
     private MetricProperties properties;
 
-    @SerializedName("type")
+    @Json(name = "type")
     private MetricConfiguration configuration;
 
     @VisibleForTesting
@@ -74,37 +75,5 @@ public final class Metric implements Parcelable {
         return configuration;
     }
 
-    public static Creator<Metric> CREATOR = new Creator<Metric>() {
-        @Override
-        public Metric createFromParcel(Parcel parcel) {
-            return new Metric(parcel);
-        }
 
-        @Override
-        public Metric[] newArray(int size) {
-            return new Metric[size];
-        }
-    };
-
-    private Metric(Parcel parcel) {
-        this.id = parcel.readString();
-        this.name = parcel.readString();
-        this.path = parcel.readString();
-        this.properties = parcel.readParcelable(MetricProperties.class.getClassLoader());
-        this.configuration = parcel.readParcelable(MetricConfiguration.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(path);
-        parcel.writeParcelable(properties, flags);
-        parcel.writeParcelable(configuration, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

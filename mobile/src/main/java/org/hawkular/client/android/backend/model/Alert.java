@@ -22,37 +22,38 @@ import java.util.List;
 import org.jboss.aerogear.android.core.RecordId;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-public final class Alert implements Parcelable {
+public final class Alert {
     @RecordId
-    @SerializedName("id")
+    @Json(name = "id")
     private String id;
 
-    @SerializedName("severity")
+    @Json(name = "severity")
     private String severity;
 
-    @SerializedName("status")
+    @Json(name = "status")
     private String status;
 
-    @SerializedName("ctime")
+    @Json(name = "ctime")
     private long timestamp;
 
-    @SerializedName("evalSets")
-    private List<Lister> evaluations;
+    @Json(name = "evalSets")
+    private List<ArrayList<AlertEvaluation>> evaluations;
 
-    @SerializedName("notes")
+    @Json(name = "notes")
     private List<Note> notes;
 
-    @SerializedName("trigger")
+    @Json(name = "trigger")
     private Trigger trigger;
 
     @VisibleForTesting
-    public Alert(@NonNull String id, long timestamp, @NonNull List<Lister> evaluations, @NonNull String severity,
+    public Alert(@NonNull String id, long timestamp, @NonNull List<ArrayList<AlertEvaluation>> evaluations, @NonNull String severity,
                  @NonNull String status, @NonNull List<Note> notes) {
         this.id = id;
         this.timestamp = timestamp;
@@ -82,7 +83,7 @@ public final class Alert implements Parcelable {
         return timestamp;
     }
 
-    public List<Lister> getEvaluations() {
+    public List<ArrayList<AlertEvaluation>> getEvaluations() {
         return evaluations;
     }
 
@@ -92,78 +93,6 @@ public final class Alert implements Parcelable {
 
     public List<Note> getNotes() {
         return notes;
-    }
-
-    public static Creator<Alert> CREATOR = new Creator<Alert>() {
-        @Override
-        public Alert createFromParcel(Parcel parcel) {
-            return new Alert(parcel);
-        }
-
-        @Override
-        public Alert[] newArray(int size) {
-            return new Alert[size];
-        }
-    };
-
-    private Alert(Parcel parcel) {
-        this.id = parcel.readString();
-        this.severity = parcel.readString();
-        this.status = parcel.readString();
-        this.timestamp = parcel.readLong();
-
-        evaluations = new ArrayList<>();
-        notes = new ArrayList<>();
-
-        parcel.readList(evaluations, Lister.class.getClassLoader());
-        parcel.readList(notes, Note.class.getClassLoader());
-
-        this.trigger = parcel.readParcelable(Trigger.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(severity);
-        parcel.writeString(status);
-        parcel.writeLong(timestamp);
-
-        parcel.writeList(evaluations);
-        parcel.writeList(notes);
-
-        parcel.writeParcelable(trigger, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static class Lister extends ArrayList<AlertEvaluation> implements Parcelable {
-
-        protected Lister(Parcel in) {
-            this.addAll(in.readArrayList(AlertEvaluation.class.getClassLoader()));
-        }
-
-        public static final Creator<Lister> CREATOR = new Creator<Lister>() {
-            @Override
-            public Lister createFromParcel(Parcel in) {
-                return new Lister(in);
-            }
-
-            @Override
-            public Lister[] newArray(int size) {
-                return new Lister[size];
-            }
-        };
-
-        @Override public int describeContents() {
-            return 0;
-        }
-
-        @Override public void writeToParcel(Parcel parcel, int flags) {
-            parcel.writeList(this);
-        }
     }
 
 }
